@@ -1,11 +1,13 @@
+🌐 [English](README.md) | 🇰🇷 [한국어](README.ko.md)
+
 # 📸 Viewport Render & Preview
 
 A professional, high-performance Blender addon designed to streamline your viewport rendering workflow. Automatically save beautiful, transparent, and overlay-free viewport screenshots named after your active object with a single click.
 
 <p align="center">
- <img src="https://img.shields.io/badge/Blender-5.1+-306EE8?logo=blender&logoColor=white&style=for-the-badge" alt="Blender Version">
- <img src="https://img.shields.io/badge/Format-PNG%20%2F%20RGBA-4CAF50?style=for-the-badge" alt="Format support">
- <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Blender-5.1+-306EE8?logo=blender&logoColor=white&style=for-the-badge" alt="Blender Version">
+  <img src="https://img.shields.io/badge/Format-PNG%20%2F%20RGBA-4CAF50?style=for-the-badge" alt="Format support">
+  <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="License">
 </p>
 
 ---
