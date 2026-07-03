@@ -5,7 +5,7 @@ A professional, high-performance Blender addon designed to streamline your viewp
 <p align="center">
  <img src="https://img.shields.io/badge/Blender-5.1+-306EE8?logo=blender&logoColor=white&style=for-the-badge" alt="Blender Version">
  <img src="https://img.shields.io/badge/Format-PNG%20%2F%20RGBA-4CAF50?style=for-the-badge" alt="Format support">
- <img src="https://img.shields.io/badge/License-MIT-orange?style=for-the-badge" alt="License">
+ <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="License">
 </p>
 
 ---
@@ -94,4 +94,5 @@ Located in the 3D Viewport > Sidebar (N-Panel) > K-Quick Tools tab under the Vie
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is licensed under the GNU GPL v3.0 License. See the [LICENSE](file:///c:/Users/user/AppData/Roaming/Blender%20Foundation/Blender/5.1/scripts/addons/viewport_render_preview/LICENSE) file for details.
+
