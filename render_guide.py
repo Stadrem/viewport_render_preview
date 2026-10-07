@@ -115,34 +115,20 @@ def _tag_redraw_viewports(context=None):
 
 
 def suspend_render_guides(context):
-    """Turn off render guides (this addon + Hyper Easy Toolkit) so they don't end up in captures.
+    """Turn off the render guide so it doesn't end up in captures.
     Returns a token for resume_render_guides()."""
-    local_on = False
-    het_on = False
+    was_on = False
     try:
-        local_on = is_render_guide_enabled(context.scene)
-        if local_on:
+        was_on = is_render_guide_enabled(context.scene)
+        if was_on:
             disable_render_guide(context)
     except Exception as e:
-        print(f"Error disabling local render guide: {e}")
-    try:
-        import hyper_easy_toolkit
-        het_on = hyper_easy_toolkit.is_render_guide_enabled(context.scene)
-        if het_on:
-            hyper_easy_toolkit.disable_render_guide(context)
-    except Exception:
-        pass
-    return local_on, het_on
+        print(f"Error disabling render guide: {e}")
+    return was_on
 
-def resume_render_guides(context, token):
-    local_on, het_on = token
-    if local_on:
+def resume_render_guides(context, was_on):
+    if was_on:
         try: enable_render_guide(context)
-        except Exception: pass
-    if het_on:
-        try:
-            import hyper_easy_toolkit
-            hyper_easy_toolkit.enable_render_guide(context)
         except Exception: pass
 
 
