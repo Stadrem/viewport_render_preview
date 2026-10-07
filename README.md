@@ -1,100 +1,109 @@
 🌐 [English](README.md) | 🇰🇷 [한국어](README.ko.md)
 
-# 📸 Viewport Render & Preview
+# 📸 Viewport Render & Batch Camera
 
-A professional, high-performance Blender addon designed to streamline your viewport rendering workflow. Automatically save beautiful, transparent, and overlay-free viewport screenshots named after your active object with a single click.
+A Blender addon that saves clean images straight to a folder — either a quick viewport capture named after your active object, or a batch of cameras rendered one after another, each with its own resolution. Both share a single set of output settings.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Blender-5.1+-306EE8?logo=blender&logoColor=white&style=for-the-badge" alt="Blender Version">
-  <img src="https://img.shields.io/badge/Format-PNG%20%2F%20RGBA-4CAF50?style=for-the-badge" alt="Format support">
+  <img src="https://img.shields.io/badge/Format-PNG%20%2F%20JPG-4CAF50?style=for-the-badge" alt="Format support">
   <img src="https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge" alt="License">
 </p>
+
+> Version 2.0 merges the former **Batch Camera Renderer** addon into this one. If you used it, disable/remove `batch_camera_renderer.py` before enabling this version — per-camera resolutions stored in your `.blend` files carry over unchanged.
 
 ---
 
 ## 🌟 Key Features
 
-- ⚡ Auto-Named Viewport Rendering: Saves high-quality viewport preview images named automatically after the currently selected active object with a clean date-time timestamp (`Object_YYYYMMDD_HHMMSS.png`).
-- 🙈 Smart Grid & Overlay Hiding: Temporarily disables all viewport overlays (Grid, Gizmos, 3D Cursor, Bones) only *during* the render operation, restoring your viewport configuration perfectly immediately afterward.
-- 👻 One-Click Transparent Backgrounds: Render high-quality sprites with transparency! Dynamically applies PNG, RGBA, and Eevee Film Transparent settings just for the render, preserving your scene's original settings completely.
-- 🎨 Custom Viewport Background Color: When transparency is toggled off, a customizable background color picker becomes visible, allowing you to render sprites on a clean, custom flat color.
-- 📁 One-Click Open Directory: Easily open your output directory directly in your operating system's file explorer using the folder shortcut button.
-- 📐 Active Aspect Ratio Render Guides: Expose a customizable dark mask and yellow aspect-ratio outline that shows you exactly how your final scene camera boundaries crop the active 3D Viewport.
+- ⚡ Auto-Named Viewport Capture: Saves the viewport as `Object_YYYYMMDD_HHMMSS.png` named after the active object. Captures within the same second get a `_2`, `_3`… suffix instead of overwriting.
+- 🎥 Batch Camera Rendering: Renders every camera in a list to `<CameraName>.png/.jpg`, using either a full render (F12) or a fast viewport capture through each camera.
+- 📏 Per-Camera Resolution: Each camera can store its own resolution. Selecting the camera applies it to the scene and turns on the Render Guide.
+- 🙈 Smart Overlay Hiding: Temporarily disables viewport overlays (grid, gizmos, 3D cursor, bones) only during viewport captures.
+- 👻 Transparent Backgrounds: Applies PNG, RGBA and Film Transparent only for the render, then restores your scene's original settings.
+- 🎨 Custom Viewport Background Color: With transparency off, viewport captures use a flat color of your choice.
+- 📁 One-Click Open Directory: Opens the output folder in Explorer / Finder.
+- 📐 Render Guide: A dark mask and yellow outline that show how the render resolution crops the 3D Viewport.
 
 ---
 
 ## ⚠️ Engine Support & Cycles Fallback
 
-The standard viewport rendering operator (`bpy.ops.render.opengl`) cannot synchronously capture progressive viewport renders in Cycles Rendered Mode due to Cycles' decoupled, asynchronous draw loop (resulting in completely blank or empty alpha frames). 
+The viewport render operator (`bpy.ops.render.opengl`) cannot capture Cycles' progressive viewport render (it produces blank frames). If the viewport is in `Rendered` shading with `Cycles`, the addon switches to Eevee just for the capture and restores Cycles afterwards. Solid, Material Preview and Wireframe capture normally with any engine.
 
-To guarantee perfect and instant previews:
-- Cycles Rendered Mode Fallback: If your active viewport is in `Rendered` shading mode and your engine is set to `Cycles`, the addon automatically swaps the viewport engine to Eevee for the split second it takes to capture the screenshot, then instantly reverts your engine settings back to `Cycles` without disrupting your workflow.
-- *Note:* Using Material Preview, Solid, or Wireframe shading modes will capture instantly using Eevee/Workbench regardless of your active render engine.
+Batch camera rendering in **Render** mode uses the real scene engine (Cycles included).
 
 ---
 
 ## 🛠️ Panel Interface Overview
 
-Located in the 3D Viewport > Sidebar (N-Panel) > K-Quick Tools tab under the Viewport Render section:
+3D Viewport > Sidebar (N-Panel) > **K-Quick Tools** > **Render**:
 
 ```
-┌──────────────────────────────────────────┐
-│ ▼ 📺 Viewport Render           │
-├──────────────────────────────────────────┤
-│ [ Show Render Guide ]          │
-│                     │
-│ ┌─ Render Options ───────────────────┐ │
-│ │ [x] Hide Overlays on Render    │ │
-│ │ [ ] Transparent BG (PNG)      │ │
-│ │   Background Color [🎨 Pick]   │ │
-│ └────────────────────────────────────┘ │
-│                     │
-│ Folder: [ Rendering        ] ↪ │
-│                     │
-│ ┌────────────────────────────────────┐ │
-│ │     [ 📷 Rendering ]      │ │
-│ └────────────────────────────────────┘ │
-└──────────────────────────────────────────┘
+▼ Render
+  [ Show Render Guide ]
+  ┌ Output ───────────────────────────┐
+  │ Folder: [ Rendering ] ↪            │
+  │ [ PNG | JPG ]                      │
+  │ [ ] Transparent Background         │
+  └────────────────────────────────────┘
+  ┌ Viewport Capture ─────────────────┐
+  │ [x] Hide Overlays                  │
+  │ Background Color [🎨]              │
+  └────────────────────────────────────┘
+  ▼ Viewport
+     Name: Cube_<time>
+     [ 📷 Capture Viewport ]
+  ▼ Cameras
+     [ + Get Selected Cameras ]
+     [ Cam_A, Cam_B, ... ]
+     Active Cam: Cam_A  [x] Use Custom Resolution  X / Y
+     [ Render | Viewport ]
+     [ 📷 Render Cameras ]
 ```
 
-- Show / Hide Render Guide: Toggles the custom aspect-ratio boundary guide drawn natively using the GPU shader.
-- Hide Overlays on Render: When checked, hides all overlays (grids, paths, axes, bones) during render only, so you don't have to manually hide them.
-- Transparent BG (PNG): Automatically handles rendering transparency (PNG format, RGBA mode, Film transparent) without changing your main project's permanent render settings.
-- Background Color: Visible only when *Transparent BG* is off. Lets you specify a flat colored background for the viewport preview render.
-- Folder: Specify the directory name (relative to the active `.blend` file) where preview images are saved. Defaults to `Rendering`.
-- Open Directory Button (↪ / FOLDER_REDIRECT): Automatically creates the specified folder (if it doesn't exist yet) and opens it in Windows Explorer / Finder.
+- Folder: Output folder. A relative path is resolved next to the `.blend` file (the file must be saved); an absolute path works anywhere. Defaults to `Rendering`.
+- PNG / JPG: File format for both viewport captures and camera renders.
+- Transparent Background: PNG only. Applies RGBA + Film Transparent for the render.
+- Hide Overlays / Background Color: Apply to viewport captures (including camera batch in Viewport mode).
+- Cameras › Render | Viewport: *Render* runs a full F12 render per camera; *Viewport* captures the 3D view through each camera (fast preview, uses the viewport's shading).
 
 ---
 
 ## 🚀 Installation
 
 1. Download the repository as a `.zip` file.
-2. Open Blender, go to Edit > Preferences > Addons.
-3. Click Install... at the top right and select the downloaded `.zip` file.
-4. Search for "Viewport Render & Preview" in the list and check the checkbox to activate it.
+2. Open Blender, go to Edit > Preferences > Add-ons.
+3. Click Install... and select the downloaded `.zip` file.
+4. Search for "Viewport Render & Batch Camera" and enable it.
 
 ---
 
 ## 📖 How to Use
 
-1. Save your `.blend` file (renders will be saved relative to this file).
-2. Select the object you want to render in the viewport (the saved file name will match the active object's name + date-time).
-3. Open the N-Panel (Sidebar) in the 3D viewport, click the K-Quick Tools tab.
-4. Configure your Render Options (Hide Overlays, Transparent BG, or Background Color).
-5. Click the big Rendering button.
-6. The image will render instantly and save to the `<your_blend_file_directory>/Rendering/Active_Object_Name_YYYYMMDD_HHMMSS.png`!
-7. Click the folder shortcut button (↪) next to the folder path to open and verify the rendered files immediately!
+**Viewport capture**
+1. Save your `.blend` file.
+2. Select the object to name the image after.
+3. Click **Capture Viewport** → `<blend_dir>/Rendering/Object_YYYYMMDD_HHMMSS.png`
+
+**Camera batch**
+1. Select cameras and click **Get Selected Cameras**.
+2. (Optional) Select each camera and set **Use Custom Resolution**.
+3. Choose **Render** or **Viewport**, then click **Render Cameras** → `<blend_dir>/Rendering/<CameraName>.png`
 
 ---
 
 ## 📁 File Structure
 
-- `__init__.py`: Handles addon metadata definition, registration, and module reloading.
-- `viewport_render_preview.py`: Main engine including the custom GPU viewport aspect-ratio guides, key render operators, dynamic transparent overlays, and N-Panel UI elements.
+- `__init__.py`: Addon metadata, registration and module reloading.
+- `common.py`: Shared output settings, output-path handling, scene render state save/restore.
+- `render_guide.py`: GPU render-resolution guide overlay.
+- `viewport_render.py`: Viewport capture helpers and the Capture Viewport operator.
+- `batch_camera.py`: Per-camera resolution properties and the camera batch operator.
+- `ui.py`: N-Panel UI.
 
 ---
 
 ## 📄 License
 
-This project is licensed under the GNU GPL v3.0 License. See the [LICENSE](file:///c:/Users/user/AppData/Roaming/Blender%20Foundation/Blender/5.1/scripts/addons/viewport_render_preview/LICENSE) file for details.
-
+This project is licensed under the GNU GPL v3.0 License. See the [LICENSE](LICENSE) file for details.
